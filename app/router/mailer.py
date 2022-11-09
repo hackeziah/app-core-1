@@ -16,6 +16,7 @@ async def notification():
 
 @router.post("/send-email")
 async def sending_email(email: str, message: str):
+    # check valid mailer
     if email and message:
         message = 'Subject: {}\n\n{}'.format("MyEmailer", message)
         send_email(email, message)
