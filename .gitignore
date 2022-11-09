@@ -1,1 +1,13 @@
-venv
+venv/
+*.pyc
+env/
+*.sqlite3
+.idea/
+.DS_Store
+/media/
+!/media/poll-images/
+# /static/
+venv/
+data/
+data
+# app/*.pyc
