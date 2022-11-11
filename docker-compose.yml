@@ -25,10 +25,11 @@ services:
     volumes:
       - ./data:/data/db
     environment:
-      - "MONGO_INITDB_DATABASE=${MONGO_DB}"
-      - "MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}"
-      - "MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASS}"
-      - "MONGO_URI=mongodb://{MONGO_USER}:${MONGO_PASS}@mongo:27017/"
+      - "MONGO_INITDB_DATABASE=mydb"
+      - "MONGO_INITDB_ROOT_USERNAME=root"
+      - "MONGO_INITDB_ROOT_PASSWORD=pass"
+      # - "MONGO_URI=mongodb://{MONGO_USER}:${MONGO_PASS}@mongo:27017/"
+
 
     command:
       mongod --quiet --logpath /dev/null
@@ -37,9 +38,9 @@ services:
   rabbitmq3:
     image: rabbitmq:3-management
     environment:
-      -RABBITMQ_ERLANG_COOKIE: 'secret cookie here'
-      -RABBITMQ_DEFAULT_USER: 'admin'
-      -RABBITMQ_DEFAULT_PASS: 'admin'
+      - "RABBITMQ_ERLANG_COOKIE=secret cookie here"
+      - "RABBITMQ_DEFAULT_USER=admin"
+      - "RABBITMQ_DEFAULT_PASS=admin"
       
     ports:
       - 15672:15672 #for user: guest pass: guest

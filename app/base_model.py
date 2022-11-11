@@ -7,4 +7,3 @@ class User(BaseModel):
     last_name: str
     first_name: str
     email: str
-    is_active: bool

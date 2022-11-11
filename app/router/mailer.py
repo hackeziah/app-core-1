@@ -10,8 +10,8 @@ router = APIRouter(
 )
 
 @router.get("/")
-async def notification():
-    return {"message": "Initial Database"}
+async def root():
+    return {"message": "Hello World"}
 
 
 @router.post("/send-email")

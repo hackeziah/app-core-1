@@ -5,6 +5,7 @@ from fastapi import HTTPException
 from dotenv import load_dotenv
 load_dotenv(".env")
 
+
 # Exceptions 
 def raise_item_cannot_be_found_exception():
     return HTTPException(status_code=404,
