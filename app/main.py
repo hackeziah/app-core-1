@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.utils import send_email
-from app.router import mailer, matching
+from app.router import mailer, matching, user
 
 app = FastAPI(
     title="App Core Service",
@@ -20,4 +20,6 @@ app = FastAPI(
 
 app.include_router(mailer.router)
 app.include_router(matching.router)
+app.include_router(user.router)
+
 

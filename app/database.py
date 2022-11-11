@@ -1,22 +1,38 @@
+import os
+import motor.motor_asyncio
+from dotenv import load_dotenv
+load_dotenv(".env")
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./app.db"
+root = os.environ.get("MONGO_USER")
+password = os.environ.get("MONGO_PASS")
 
-# MYSQL Series
-# SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:test1234!@127.0.0.1:3306/todoapp"
+MONGODB_URL = 'mongodb://root:password@mongodb'
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+client =  motor.motor_asyncio.AsyncIOMotorClient(MONGODB_URL)
+# MongoClient("mongodb://userName:password@<mongodb cointaner name or ip>/sampledb")
+# connect to database python_db
+database = client.mydb
 
-# MYSQL Series
+
+# from sqlalchemy import create_engine
+# from sqlalchemy.orm import sessionmaker
+# from sqlalchemy.ext.declarative import declarative_base
+
+# SQLALCHEMY_DATABASE_URL = "sqlite:///./app.db"
+
+# # MYSQL Series
+# # SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:test1234!@127.0.0.1:3306/todoapp"
+
 # engine = create_engine(
-#     SQLALCHEMY_DATABASE_URL
+#     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 # )
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# # MYSQL Series
+# # engine = create_engine(
+# #     SQLALCHEMY_DATABASE_URL
+# # )
 
-Base = declarative_base()
+# SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Base = declarative_base()
