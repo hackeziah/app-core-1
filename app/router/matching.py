@@ -2,10 +2,11 @@ import os
 import shutil
 import PyPDF2, pdfplumber
 import filetype
+import time
 from starlette.responses import JSONResponse
-
+from app.celery_worker import create_task
 from starlette import status
-from fastapi import APIRouter, FastAPI, File, UploadFile
+from fastapi import APIRouter, FastAPI, File, UploadFile, Body
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 from app.utils import raise_pdf_not_valid, send_email, codeGenerate
@@ -19,6 +20,28 @@ router = APIRouter(
     responses={404: {"description": "Not found"}}
 )
 
+
+# @router.post(bind=True)
+# def long_task(self, iteration):
+#     for i in range(1, iteration):
+#         time.sleep(1)
+#         self.update_state(state='PROGRESS',
+#                           meta={'current': i, 'total': iteration,
+#                                 'status': str(i) + '%'})
+#     return {'current': 100, 'total': 100, 'status': '100%'}
+# @router.post("/tasks", status_code=201)
+# def run_task(payload = Body(...)):
+#     task_type = payload["type"]
+#     task = create_task.delay(int(task_type))
+#     return JSONResponse({"task_id": task.id})
+
+@router.post("/tasks")
+def run_task(data=Body(...)):
+    amount = int(data["amount"])
+    x = data["x"]
+    y = data["y"]
+    task = create_task.delay(amount, x, y)
+    return JSONResponse({"Result": task.get()})
 
 
 @router.post("/uploadfile/")
@@ -54,7 +77,7 @@ async def convert_comapare_data(id:str,  job_description: str):
         for i in range (0,pages):
             page=pdf.pages[i]
             text=page.extract_text()
-            print (text)
+            
             Script.append(text)
 
     Script=''.join(Script)

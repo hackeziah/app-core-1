@@ -8,12 +8,15 @@ load_dotenv(".env")
 root = os.environ.get("MONGO_USER")
 password = os.environ.get("MONGO_PASS")
 
-MONGODB_URL = 'mongodb://root:password@mongodb'
+MONGODB_URL = 'mongodb://root:pass@mongodb'
+# client = MongoClient("mongodb://user_name:user_password@SERVER_IP/prod-db")
+# db = client['prod-db'
 
 client =  motor.motor_asyncio.AsyncIOMotorClient(MONGODB_URL)
 # MongoClient("mongodb://userName:password@<mongodb cointaner name or ip>/sampledb")
 # connect to database python_db
 database = client.mydb
+
 
 
 # from sqlalchemy import create_engine
