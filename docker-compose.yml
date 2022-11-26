@@ -6,14 +6,7 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-        - mongodb
-
-  # db:
-  #   image: mongo
-  #   ports:
-  #     - "27017:27017"
-  #   volumes:
-  #     - ./data:/data/db
+        - mongodb 
 
   mongodb:
     image: mongo:latest
@@ -28,19 +21,37 @@ services:
       - "MONGO_INITDB_DATABASE=mydb"
       - "MONGO_INITDB_ROOT_USERNAME=root"
       - "MONGO_INITDB_ROOT_PASSWORD=pass"
-      # - "MONGO_URI=mongodb://{MONGO_USER}:${MONGO_PASS}@mongo:27017/"
-
 
     command:
       mongod --quiet --logpath /dev/null
     
+  redis:
+    container_name: redis
+    image: redis:6.2-alpine
 
-  rabbitmq3:
-    image: rabbitmq:3-management
+  celery_worker:
+    build: .
+    image: madefire/chordtest
+    command: celery -A app.celery_worker worker -l INFO
+    volumes:
+      - .:/app
     environment:
-      - "RABBITMQ_ERLANG_COOKIE=secret cookie here"
-      - "RABBITMQ_DEFAULT_USER=admin"
-      - "RABBITMQ_DEFAULT_PASS=admin"
-      
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+    depends_on:
+      - app
+      - redis
+
+  flower:
+    container_name: flower
+    build: .
+    command: celery -A app.celery_worker flower --port=5555
     ports:
-      - 15672:15672 #for user: guest pass: guest
+      - 5556:5555
+    environment:
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+    depends_on:
+      - app
+      - redis
+      - celery_worker

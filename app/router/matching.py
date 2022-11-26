@@ -4,8 +4,10 @@ import PyPDF2, pdfplumber
 import filetype
 from starlette.responses import JSONResponse
 
+
 from starlette import status
-from fastapi import APIRouter, FastAPI, File, UploadFile
+from app.celery_worker import create_task
+from fastapi import APIRouter, FastAPI, File, UploadFile, Body
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 from app.utils import raise_pdf_not_valid, send_email, codeGenerate
@@ -19,6 +21,13 @@ router = APIRouter(
     responses={404: {"description": "Not found"}}
 )
 
+@router.post("/ex1")
+def run_task(data=Body(...)):
+    amount = int(data["amount"])
+    x = data["x"]
+    y = data["y"]
+    task = create_task.delay(amount, x, y)
+    return JSONResponse({"Result": task.get()})
 
 
 @router.post("/uploadfile/")

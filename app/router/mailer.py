@@ -1,5 +1,5 @@
 from starlette import status
-from fastapi import APIRouter
+from fastapi import APIRouter, BackgroundTasks
 from app.utils import send_email
 
 
@@ -15,11 +15,10 @@ async def root():
 
 
 @router.post("/send-email")
-async def sending_email(email: str, message: str):
+async def sending_email(email: str, message: str, background_tasks: BackgroundTasks):
     # check valid mailer
     if email and message:
         message = 'Subject: {}\n\n{}'.format("MyEmailer", message)
-        send_email(email, message)
         return {"message": "Sending Email"}
     return {"message": "Fail"}
 
