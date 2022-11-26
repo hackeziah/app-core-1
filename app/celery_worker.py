@@ -19,8 +19,7 @@ def create_task(a, b, c):
 
 
 @celery.task(name="generate_analysis")
-def create_task(a, b, c):
-    time.sleep(a)
-    return b + c
-
+def generate_analysis(timer):
+    time.sleep(timer)
+    return True
 
